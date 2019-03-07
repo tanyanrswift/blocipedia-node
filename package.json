@@ -2,7 +2,7 @@
   "name": "blocipedia",
   "version": "1.0.0",
   "description": "An application that allows users to create, collaborate, and share wikis.",
-  "main": "\u001b[C\u001b[C\u001b[C\u001b[C\u001b[C\u001b[Csrc/server.js)",
+  "main": "\u001b[D\u001b[D\u001b[D\u001bsrc/server.js)",
   "scripts": {
     "test": "set NODE_ENV=test&& jasmine",
     "start": "node src/server.js"
@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "jasmine": "^3.0.0",
+    "faker": "^4.1.0",
+    "jasmine": "^3.3.1",
     "request": "^2.83.0"
   },
   "dependencies": {
