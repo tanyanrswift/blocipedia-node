@@ -36,7 +36,7 @@ module.exports = {
     });
   },
   destroy(req, res, next){
-    wikiQueries.deleteWiki(req, (err, topic) => {
+    wikiQueries.deleteWiki(req, (err, wiki) => {
       if(err){
         res.redirect(err, `/wikis/${req.params.id}`)
       } else {
