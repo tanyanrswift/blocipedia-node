@@ -3,24 +3,44 @@ const server = require("../../src/server");
 const base = "http://localhost:3000/wikis/";
 const sequelize = require("../../src/db/models/index").sequelize;
 const Wiki = require("../../src/db/models").Wiki;
+const User = require("../../src/db/models").User;
 
 describe("routes : wikis", () => {
 
   beforeEach((done) => {
+    this.user;
     this.wiki;
-    sequelize.sync({force: true}).then((res) => {
 
-      Wiki.create({
-        title: "Horsewiki",
-        body: "A wiki about horses."
+    sequelize.sync({force: true}).then((res) => {
+      User.create({
+        username: "user",
+        email: "example123@example.com",
+        password: "password1"
       })
-      .then((wiki) => {
-        this.wiki = wiki;
-        done();
-      })
-      .catch((err) => {
-        console.log(err);
-        done();
+      .then((user) => {
+        this.user = user;
+        request.get({
+          url: "http://localhost:3000/auth/fake",
+          form: {
+            role: user.role,
+            userId: user.id,
+            email: user.email
+          }
+        });
+
+        Wiki.create({
+          title: "Horsewiki",
+          body: "A wiki about horses."
+        })
+        .then((wiki) => {
+          this.wiki = wiki;
+          done();
+        })
+        .catch((err) => {
+          console.log(err);
+          done();
+        });
+
       });
 
     });
@@ -58,7 +78,8 @@ describe("routes : wikis", () => {
       url: `${base}create`,
       form: {
         title: "Cowwiki",
-        body: "A wiki about cows."
+        body: "A wiki about cows.",
+        userId: this.user.id
       }
     };
 
@@ -141,7 +162,8 @@ describe("routes : wikis", () => {
         url: `${base}${this.wiki.id}/update`,
         form: {
           title: "Horsewiki",
-          body: "A wiki about horses."
+          body: "A wiki about horses.",
+          userId: this.user.id
         }
       };
 
@@ -154,6 +176,10 @@ describe("routes : wikis", () => {
           })
           .then((wiki) => {
             expect(wiki.title).toBe("Horsewiki");
+            done();
+          })
+          .catch((err) => {
+            console.log(err);
             done();
           });
         });
