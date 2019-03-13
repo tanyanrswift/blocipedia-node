@@ -45,8 +45,6 @@ describe("routes : wikis", () => {
 
     });
 
-  });
-
   describe("GET /wikis", () => {
 
     it("should return a status code 200 and all wikis", (done) => {
@@ -189,4 +187,5 @@ describe("routes : wikis", () => {
         });
       });
     });
+  });
 });

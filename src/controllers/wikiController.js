@@ -22,8 +22,10 @@ module.exports = {
     wikiQueries.addWiki(newWiki, (err, wiki) => {
       if(err){
         res.redirect(500, "/wikis/new");
+        console.log("newWiki:failed");
       } else {
         res.redirect(303, `/wikis/${wiki.id}`);
+        console.log(newWiki);
       }
     });
   },
