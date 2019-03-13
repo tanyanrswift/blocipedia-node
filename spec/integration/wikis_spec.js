@@ -22,7 +22,6 @@ describe("routes : wikis", () => {
         request.get({
           url: "http://localhost:3000/auth/fake",
           form: {
-            role: user.role,
             userId: user.id,
             email: user.email
           }
@@ -30,7 +29,8 @@ describe("routes : wikis", () => {
 
         Wiki.create({
           title: "Horsewiki",
-          body: "A wiki about horses."
+          body: "A wiki about horses.",
+          userId: user.id
         })
         .then((wiki) => {
           this.wiki = wiki;
@@ -74,16 +74,16 @@ describe("routes : wikis", () => {
   });
 
   describe("POST /wikis/create", () => {
-    const options = {
-      url: `${base}create`,
-      form: {
-        title: "Cowwiki",
-        body: "A wiki about cows.",
-        userId: this.user.id
-      }
-    };
 
     it("should create a new wiki and redirect", (done) => {
+      const options = {
+        url: `${base}create`,
+        form: {
+          title: "Cowwiki",
+          body: "A wiki about cows.",
+          userId: this.user.id
+        }
+      };
 
       request.post(options,
 
@@ -132,6 +132,10 @@ describe("routes : wikis", () => {
           .then((wikis) => {
             expect(err).toBeNull();
             expect(wikis.length).toBe(wikiCountBeforeDelete - 1);
+            done();
+          })
+          .catch((err) => {
+            console.log(err);
             done();
           })
 

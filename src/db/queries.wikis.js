@@ -2,11 +2,10 @@ const Wiki = require("./models").Wiki;
 const User = require("./models").User;
 
 module.exports = {
+
   getAllWikis(callback){
     return Wiki.all()
-    console.log('test');
     .then((wikis) => {
-      console.log(wikis)
       callback(null, wikis);
     })
     .catch((err) => {
@@ -27,19 +26,16 @@ module.exports = {
     })
   },
   getWiki(id, callback){
-    return Wiki.findById(id){
-      .then((wiki) => {
+    return Wiki.findById(id)
+    .then((wiki) => {
         callback(null, wiki);
-      })
-      .catch((err) => {
-        callback(err);
-      })
-    }
-  },
-  deleteWiki(id, callback){
-    return Wiki.destroy({
-      where: {id}
     })
+    .catch((err) => {
+        callback(err);
+    })
+  },
+  deleteWiki(req, callback){
+    return Wiki.findById(req.params.id)
     .then((wiki) => {
       callback(null, wiki);
     })
@@ -47,8 +43,8 @@ module.exports = {
       callback(err);
     })
   },
-  updateWiki(id, updatedWiki, callback){
-    return Wiki.findById(id)
+  updateWiki(req, updatedWiki, callback){
+    return Wiki.findById(req.params.id)
     .then((wiki) => {
       if(!wiki){
         return callback("Wiki not found");

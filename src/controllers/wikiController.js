@@ -2,7 +2,6 @@ const wikiQueries = require("../db/queries.wikis.js");
 
 module.exports = {
   index(req, res, next){
-    console.log('test');
     wikiQueries.getAllWikis((err, wikis) => {
       if(err){
         res.redirect(500, "static/index");
@@ -18,6 +17,7 @@ module.exports = {
     let newWiki = {
       title: req.body.title,
       body: req.body.body,
+      userId: req.user.id
     };
     wikiQueries.addWiki(newWiki, (err, wiki) => {
       if(err){
@@ -39,7 +39,7 @@ module.exports = {
   destroy(req, res, next){
     wikiQueries.deleteWiki(req, (err, wiki) => {
       if(err){
-        res.redirect(err, `/wikis/${req.params.id}`)
+        res.redirect(500, `/wikis/${req.params.id}`)
       } else {
         res.redirect(303, "/wikis")
       }
