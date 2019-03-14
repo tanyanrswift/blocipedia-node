@@ -15,10 +15,10 @@ module.exports = class TopicPolicy extends ApplicationPolicy {
   }
 
   update() {
-    return (this._isAdmin() || this._isPremium());
+    return this.edit();
   }
 
   destroy() {
-    return this.update();
+    return (this._isAdmin() || this_isPremium());
   }
 }
