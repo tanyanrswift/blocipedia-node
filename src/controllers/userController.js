@@ -37,6 +37,7 @@ module.exports = {
         req.flash("notice", "Sign in failed. Please try again.")
         res.redirect("/users/sign_in");
       } else {
+        console.log("Sign In Successful");
         req.flash("notice", "You've successfully signed in!");
         res.redirect("/");
       }
@@ -46,5 +47,17 @@ module.exports = {
     req.logout();
     req.flash("notice", "You've successfully signed out!");
     res.redirect("/");
+  },
+  upgradeForm(req, res, next){
+    res.render("users/upgrade");
+  },
+  upgrade(req, res, next){
+    //code for us to actually upgrade
+  },
+  downgradeForm(req, res, next){
+    res.render("users/downgrade");
+  },
+  downgrade(req, res, next){
+    //code for us to actually downgrade
   }
 }
