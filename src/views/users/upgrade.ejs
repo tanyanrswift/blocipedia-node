@@ -11,9 +11,11 @@
 
       <% include ../static/partials/messages.ejs %>
 
-      <h1>Upgrade your plan!</h1>
+      <h1>UPGRADE YOUR PLAN!</h1>
 
-      <form action="users/upgrade" method="POST">
+      <h2>Premium access to Blocipedia allows you to create private wikis.<h2>
+      <h3>Click "Pay with Card" below to upgrade:<h3>
+      <form action="users/<%=currentUser.id%>/upgrade" method="POST">
         <script
           src="https://checkout.stripe.com/checkout.js" class="stripe-button"
           data-key="pk_test_Q6mQ7lzSGN4e6eCFgXtAVhMR"

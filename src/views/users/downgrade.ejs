@@ -11,19 +11,12 @@
 
       <% include ../static/partials/messages.ejs %>
 
-      <h1>Upgrade your plan!</h1>
+      <h1>DOWNGRADE YOUR PLAN</h1>
 
-      <!---<form action="users/downgrade" method="POST">
-        <script
-          src="https://checkout.stripe.com/checkout.js" class="stripe-button"
-          data-key="pk_test_Q6mQ7lzSGN4e6eCFgXtAVhMR"
-          data-amount="1500"
-          data-name="Blocipedia Account Upgrade"
-          data-description="Account Upgrade Charge"
-          data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-          data-locale="auto">
-        </script>
-      </form>--->
+      <h2>If you no longer want to have premium access, opt out below by clicking the "Downgrade" button<h2>
+      <form action="users/<%=currentUser.id%>/downgrade" method="POST">
+        <button type="submit" class="btn btn-danger">Downgrade</button>
+      </form>
 
     </main>
 
