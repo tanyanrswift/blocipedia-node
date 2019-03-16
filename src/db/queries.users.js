@@ -28,5 +28,31 @@ module.exports = {
     .catch((err) => {
       callback(err);
     })
+  },
+  upgradeUser(id, callback){
+    return User.findById(id)
+    .then((user) => {
+      if(!user){
+        return callback ("User doesn't exist");
+      } else {
+        return user.updateAttibutes({role: "premium"});
+      }
+    })
+    .catch((err) => {
+      callback(err);
+    })
+  },
+  downgradeUser(id, callback){
+    return User.findById(id)
+    .then((user) => {
+      if(!user){
+        return callback ("User doesn't exist");
+      } else {
+        return user.updateAttributes({role: "standard"});
+      }
+    })
+    .catch((err) => {
+      callback(err);
+    })
   }
  };

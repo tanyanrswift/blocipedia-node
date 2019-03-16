@@ -2,8 +2,8 @@ const passport = require("passport");
 const userQueries = require("../db/queries.users.js");
 
 const keyPublishable = process.env.PUBLISHABLE_KEY;
-const keySecret = process.env.SECRET_KEY;
-const stripe = require("stripe")(keySecret);
+/*const keySecret = process.env.SECRET_KEY;
+const stripe = require("stripe")(keySecret);*/
 
 module.exports = {
   create(req, res, next){
@@ -53,27 +53,31 @@ module.exports = {
     res.redirect("/");
   },
   upgradeForm(req, res, next){
-    res.render("users/upgrade");
+    res.render("users/upgrade", {keyPublishable});
   },
   upgrade(req, res, next){
-    //code for us to actually upgrade
-    var stripe = require("stripe")("sk_test_AKp6Wxv6AE5OVM1laNsiSBMl");
+    userQueries.upgradeUser()
 
-    const token = request.body.stripeToken;
+    let amount = 1500;
 
-    (async () => {
-      const charge = await stripe.charges.create({
-        amount: 1500,
-        currency: 'usd',
-        description: 'Blocipedia Account Upgrade Charge',
-        source: token,
-      });
-    })();
+    stripe.customers.create({
+      email: req.body.stripeEmail,
+      source: req.body.stripeToken
+    })
+    .then(customer =>
+      stripe.charges.create({
+        amount,
+        description: "Blocipedia Account Upgrade Charge",
+          currency: "usd",
+          customer: customer.id
+    }))
+    .then(charge => res.render("users/upgrade_success"))
   },
   downgradeForm(req, res, next){
-    res.render("users/downgrade");
+    res.render("users/downgrade", {keyPublishable});
   },
   downgrade(req, res, next){
+    userQueries.downgradeUser();
     //code for us to actually downgrade
   }
 }
