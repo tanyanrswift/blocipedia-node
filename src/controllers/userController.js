@@ -2,8 +2,6 @@ const passport = require("passport");
 const userQueries = require("../db/queries.users.js");
 
 const keyPublishable = process.env.PUBLISHABLE_KEY;
-/*const keySecret = process.env.SECRET_KEY;
-const stripe = require("stripe")(keySecret);*/
 
 module.exports = {
   create(req, res, next){
@@ -54,30 +52,45 @@ module.exports = {
   },
   upgradeForm(req, res, next){
     res.render("users/upgrade", {keyPublishable});
+    console.log("Upgrade Form Rendered Successfully");
   },
   upgrade(req, res, next){
-    userQueries.upgradeUser()
+    userQueries.upgradeUser(req, (err, user) => {
+      if(err){
+        console.log(err);
+        req.flash("error", err);
+        res.redirect("/users/upgrade");
+      } else {
+        console.log('test');
+        let amount = 1500;
 
-    let amount = 1500;
-
-    stripe.customers.create({
-      email: req.body.stripeEmail,
-      source: req.body.stripeToken
+        stripe.customers.create({
+          email: req.body.stripeEmail,
+          source: req.body.stripeToken
+        })
+        .then(customer =>
+        stripe.charges.create({
+          amount,
+          description: "Blocipedia Account Upgrade Charge",
+            currency: "usd",
+            customer: customer.id
+        }))
+        .then(charge => res.render("users/upgrade_success"))
+      }
     })
-    .then(customer =>
-      stripe.charges.create({
-        amount,
-        description: "Blocipedia Account Upgrade Charge",
-          currency: "usd",
-          customer: customer.id
-    }))
-    .then(charge => res.render("users/upgrade_success"))
   },
   downgradeForm(req, res, next){
     res.render("users/downgrade", {keyPublishable});
+    console.log("Downgrade Form Rendered Successfully");
   },
   downgrade(req, res, next){
-    userQueries.downgradeUser();
-    //code for us to actually downgrade
+    userQueries.downgradeUser(req, (err, user) => {
+      if(err){
+        req.flash("error", err);
+        res.redirect("/users/downgrade");
+      } else {
+        res.render("/users/downgrade_success");
+      }
+    });
   }
 }
