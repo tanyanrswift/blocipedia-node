@@ -85,11 +85,14 @@ module.exports = {
     console.log("Downgrade Form Rendered Successfully");
   },
   downgrade(req, res, next){
+    console.log("User Controller Post Downgrade")
     userQueries.downgradeUser(req, (err, user) => {
       if(err){
+        console.log('err', err)
         req.flash("error", err);
         res.redirect("/users/downgrade");
       } else {
+        console.log('Here')
         res.render("/users/downgrade_success");
       }
     });
