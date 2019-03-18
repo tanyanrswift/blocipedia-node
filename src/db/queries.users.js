@@ -32,10 +32,12 @@ module.exports = {
   upgradeUser(req, callback){
     return User.findById(req.user.id)
     .then((user) => {
+      console.log('upgradeUser')
       if(!user){
-        return callback ("User doesn't exist");
+        callback ("User doesn't exist");
       } else {
-        return user.update({role: "premium"});
+        user.update({role: "premium"});
+        callback(null, user);
       }
     })
     .catch((err) => {
@@ -45,10 +47,12 @@ module.exports = {
   downgradeUser(req, callback){
     return User.findById(req.user.id)
     .then((user) => {
+      console.log('downgradeUser')
       if(!user){
         return callback ("User doesn't exist");
       } else {
-        return user.update({role: "standard"});
+        user.update({role: "standard"});
+        callback(null, user);
       }
     })
     .catch((err) => {

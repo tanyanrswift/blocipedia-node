@@ -2,6 +2,7 @@ const passport = require("passport");
 const userQueries = require("../db/queries.users.js");
 
 const keyPublishable = process.env.PUBLISHABLE_KEY;
+var stripe = require("stripe")("sk_test_AKp6Wxv6AE5OVM1laNsiSBMl");
 
 module.exports = {
   create(req, res, next){
@@ -15,7 +16,6 @@ module.exports = {
     userQueries.createUser(newUser, (err, user) => {
       if(err){
         req.flash("error", err);
-        console.log(err);
         res.redirect("/users/sign_up");
       } else {
         console.log(user);
@@ -58,11 +58,10 @@ module.exports = {
     console.log("UserController Post Upgrade");
     userQueries.upgradeUser(req, (err, user) => {
       if(err){
-        console.log(err);
         req.flash("error", err);
         res.redirect("/users/upgrade");
       } else {
-        console.log('test');
+        console.log('Stripe');
         let amount = 1500;
 
         stripe.customers.create({
@@ -92,8 +91,8 @@ module.exports = {
         req.flash("error", err);
         res.redirect("/users/downgrade");
       } else {
-        console.log('Here')
-        res.render("/users/downgrade_success");
+        console.log('Downgrade Success')
+        res.render("users/downgrade_success");
       }
     });
   }
