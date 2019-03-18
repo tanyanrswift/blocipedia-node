@@ -11,7 +11,7 @@
 
       <h1>Wikis</h1>
 
-      <% if(currentUser) { %>
+      <% if(currentUser && (currentUser.role == 'standard')) { %>
         <a href="/wikis/new" class="btn btn-success">New Wiki</a>
 
         <ul class="list-group">

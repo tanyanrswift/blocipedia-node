@@ -3,13 +3,24 @@ const Authorizer = require("../policies/wiki");
 
 module.exports = {
   index(req, res, next){
-    wikiQueries.getAllWikis((err, wikis) => {
-      if(err){
-        res.redirect(500, "static/index");
-      } else {
-        res.render("wikis/index", {wikis});
+    if(authorized && currentUser.role == 'standard'){
+        wikiQueries.getAllWikis({private: false}, (err, wikis) => {
+          if(err){
+            res.redirect(500, "static/index");
+          } else {
+            res.render("wikis/index", {wikis});
+          }
+        })
       }
-    })
+    if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
+      wikiQueries.getAllWikis({[Op.or]: [{private: true, wiki.userId == userId}, {private: false}]}, (err, wikis) => {
+        if(err){
+          res.redirect(500, "static/index";
+        } else {
+          res.render("wikis/index", {wikis});
+        }
+      })
+    }
   },
   new(req, res, next){
     const authorized = new Authorizer(req.user).new();
@@ -22,9 +33,13 @@ module.exports = {
     }
   },
   create(req, res, next){
+
     const authorized = new Authorizer(req.user).create();
 
     if(authorized) {
+      if(!req.body.private){
+        let req.body.private = false;
+      }
       let newWiki = {
         title: req.body.title,
         body: req.body.body,
@@ -33,9 +48,11 @@ module.exports = {
       };
       wikiQueries.addWiki(newWiki, (err, wiki) => {
         if(err){
+          req.flash("notice", "Failed to create a new Wiki. Try again.");
           res.redirect(500, "/wikis/new");
           console.log("newWiki:failed");
         } else {
+          req.flash("notice", "Wiki created successfully.");
           res.redirect(303, `/wikis/${wiki.id}`);
           console.log(newWiki);
         }

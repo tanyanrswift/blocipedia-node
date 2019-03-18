@@ -25,13 +25,13 @@
         <% if(currentUser.role == 'premium' || currentUser.role == 'admin'){ %>
           <div class="form-group">
             <label for="private">Will this be a private wiki?</label>
-            <select class="form-control" name="private-form">
+            <select class="form-control" name="private">
               <option value='true'>Yes, please make it Private</option>
-              <option value='false'>No, please make it Public</option>
+              <option selected value='false'>No, please make it Public</option>
             </select>
           </div>
         <% } %>
-        
+
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
     </main>

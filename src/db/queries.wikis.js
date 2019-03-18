@@ -4,8 +4,11 @@ const Authorizer = require("../policies/wiki");
 
 module.exports = {
 
-  getAllWikis(callback){
-    return Wiki.all()
+  getAllWikis(options, callback){
+    return Wiki.findAll({
+      where: options
+    }
+    )
     .then((wikis) => {
       callback(null, wikis);
     })
