@@ -29,26 +29,26 @@ module.exports = {
       callback(err);
     })
   },
-  upgradeUser(id, callback){
-    return User.findById(id)
+  upgradeUser(req, callback){
+    return User.findById(req.user.id)
     .then((user) => {
       if(!user){
         return callback ("User doesn't exist");
       } else {
-        return user.updateAttibutes({role: "premium"});
+        return user.update({role: "premium"});
       }
     })
     .catch((err) => {
       callback(err);
     })
   },
-  downgradeUser(id, callback){
-    return User.findById(id)
+  downgradeUser(req, callback){
+    return User.findById(req.user.id)
     .then((user) => {
       if(!user){
         return callback ("User doesn't exist");
       } else {
-        return user.updateAttributes({role: "standard"});
+        return user.update({role: "standard"});
       }
     })
     .catch((err) => {

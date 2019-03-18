@@ -55,6 +55,7 @@ module.exports = {
     console.log("Upgrade Form Rendered Successfully");
   },
   upgrade(req, res, next){
+    console.log("UserController Post Upgrade");
     userQueries.upgradeUser(req, (err, user) => {
       if(err){
         console.log(err);
