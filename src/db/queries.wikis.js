@@ -7,8 +7,7 @@ module.exports = {
   getAllWikis(options, callback){
     return Wiki.findAll({
       where: options
-    }
-    )
+    })
     .then((wikis) => {
       callback(null, wikis);
     })

@@ -3,19 +3,29 @@ const Authorizer = require("../policies/wiki");
 
 module.exports = {
   index(req, res, next){
+    const authorized = new Authorizer(req.user).new();
+    let currentUser = {
+      username: req.body.username,
+      email: req.body.email,
+      password: req.body.password,
+      role: req.body.role,
+      id: req.user.id
+    }
     if(authorized && currentUser.role == 'standard'){
-        wikiQueries.getAllWikis({private: false}, (err, wikis) => {
-          if(err){
-            res.redirect(500, "static/index");
-          } else {
-            res.render("wikis/index", {wikis});
-          }
-        })
-      }
-    if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
-      wikiQueries.getAllWikis({[Op.or]: [{private: true, wiki.userId == userId}, {private: false}]}, (err, wikis) => {
+      wikiQueries.getAllWikis({private: false}, (err, wikis) => {
         if(err){
-          res.redirect(500, "static/index";
+          res.redirect(500, "static/index");
+        } else {
+          res.render("wikis/index", {wikis});
+        }
+      })
+    }
+    if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
+      wikiQueries.getAllWikis({
+        [Op.or]: [{private: true, wiki.userId == currentUser.id}, {private: false}]}, (err, wikis) => {
+        //SELECT all wikis IF (private=true AND wiki userId=currentUser.id) OR private=false
+        if(err){
+          res.redirect(500, "static/index");
         } else {
           res.render("wikis/index", {wikis});
         }
@@ -38,7 +48,7 @@ module.exports = {
 
     if(authorized) {
       if(!req.body.private){
-        let req.body.private = false;
+        req.body.private = false;
       }
       let newWiki = {
         title: req.body.title,
@@ -68,6 +78,7 @@ module.exports = {
       if(err || wiki == null){
         res.redirect(404, "/");
       } else {
+        console.log(wiki)
         res.render("wikis/show", {wiki});
       }
     });
@@ -101,7 +112,19 @@ module.exports = {
       if(err || wiki == null){
         res.redirect(401, `/wikis/${req.params.id}/edit`);
       } else {
+        console.log(wiki)
+        req.flash("Wiki updated successfully!")
         res.redirect(`/wikis/${req.params.id}`);
+      }
+    });
+  },
+  downgrade(req, res, next){
+    wikiQueries.downgradeWikis(req, id, (err, user) => {
+      if(err){
+        console.log('err', err)
+        req.flash("error", err);
+      } else {
+        console.log('Wikis Downgraded')
       }
     });
   }
