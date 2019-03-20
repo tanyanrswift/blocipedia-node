@@ -2,7 +2,7 @@ const wikiQueries = require("../db/queries.wikis.js");
 const Authorizer = require("../policies/wiki");
 
 module.exports = {
-  /*index(req, res, next){
+  index(req, res, next){
     const authorized = new Authorizer(req.user);
     let currentUser = {
       username: req.body.username,
@@ -22,7 +22,7 @@ module.exports = {
         }
       })
     }
-    if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
+    else if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
       wikiQueries.getAllWikis({
         [Op.or]: [{private: true, userId: currentUser.id}, {private: false}]}, (err, wikis) => {
         //SELECT all wikis IF (private=true AND wiki userId=currentUser.id) OR private=false
@@ -35,41 +35,17 @@ module.exports = {
         }
       })
     }
-  }*/
-  indexGuest(req, res, next){
-    wikiQueries.getAllWikis({private: false}, (err, wikis) => {
-      if(err){
-        console.log(err)
-        res.redirect(500, "static/index");
-      } else {
-        console.log('not signed in wikis')
-        res.render("wikis/index", {wikis});
-      }
-    })
-  },
-  indexStandard(req, res, next){
-    wikiQueries.getAllWikis({private: false}, (err, wikis) => {
-      if(err){
-        console.log(err)
-        res.redirect(500, "static/index");
-      } else {
-        console.log('standard wikis')
-        res.render("wikis/indexStandard", {wikis});
-      }
-    })
-  },
-  indexPremium(req, res, next){
-    wikiQueries.getAllWikis({
-      [Op.or]: [{private: true, userId: currentUser.id}, {private: false}]}, (err, wikis) => {
-      //SELECT all wikis IF (private=true AND wiki userId=currentUser.id) OR private=false
-      if(err){
-        console.log(err)
-        res.redirect(500, "static/index");
-      } else {
-        console.log('premium wikis')
-        res.render("wikis/indexPremium", {wikis});
-      }
-    })
+    /*else {
+      wikiQueries.getAllWikis({private: false}, (err, wikis) => {
+        if(err){
+          console.log(err)
+          res.redirect(500, "static/index");
+        } else {
+          console.log('standard wikis')
+          res.render("wikis/index", {wikis});
+        }
+      })
+    }*/
   },
   new(req, res, next){
     const authorized = new Authorizer(req.user).new();

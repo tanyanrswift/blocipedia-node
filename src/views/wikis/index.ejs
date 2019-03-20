@@ -11,7 +11,7 @@
 
       <h1>Wikis</h1>
 
-      <!---<% if(currentUser && (currentUser.role == 'standard')) { %>
+      <% if(currentUser && (currentUser.role == 'standard')) { %>
         <a href="/wikis/new" class="btn btn-success">New Wiki</a>
 
         <ul class="list-group">
@@ -37,7 +37,7 @@
           <% }) %>
         </ul>
 
-        <% } else { %>--->
+        <% } else { %>
           <ul class="list-group">
             <% wikis.forEach((wiki) => { %>
               <% if(wiki.private == false) { %>
@@ -47,7 +47,7 @@
               <% } %>
             <% }) %>
           </ul>
-        <!---<% } %>--->
+        <% } %>
     </main>
   </body>
 </html>

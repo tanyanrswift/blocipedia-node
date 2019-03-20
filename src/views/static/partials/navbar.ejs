@@ -7,30 +7,24 @@
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item">
+          <a class="nav-link" href="/wikis">Wikis</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" href="/">Home</a>
         </li>
-
-        <% if(currentUser && currentUser.role == 'standard') { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/wikis/indexStandard">Wikis</a>
-          </li>
+        <% if(currentUser && currentUser.role == "standard") { %>
           <li class="nav-item">
             <a class="nav-link" href="/users/upgrade">Upgrade Your Plan</a>
           <li class="nav-item">
             <a class="nav-link" href="/users/sign_out">Sign out</a>
           </li>
-
         <% } else if(currentUser && currentUser.role == "premium") { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/wikis/indexPremium">Wikis</a>
           <li class="nav-item">
             <a class="nav-link" href="/users/downgrade">Downgrade your Plan</a>
           <li class="nav-item">
             <a class="nav-link" href="/users/sign_out">Sign out</a>
           </li>
         <% } else { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/wikis/index">Wikis</a>
           <li class="nav-item">
             <a class="nav-link" href="/users/sign_up">Sign up</a>
           </li>
