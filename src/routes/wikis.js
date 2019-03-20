@@ -6,7 +6,9 @@ const Wiki = require("../../src/db/models").Wiki;
 const validation = require("./validation")
 const User = require("../../src/db/models").User;
 
-router.get("/wikis", wikiController.index);
+router.get("/wikis/index", wikiController.indexGuest);
+router.get("/wikis/indexStandard", wikiController.indexStandard);
+router.get("/wikis/indexPremium", wikiController.indexPremium)
 router.get("/wikis/new", wikiController.new);
 router.get("/wikis/:id", wikiController.show);
 router.post("/wikis/create", wikiController.create);
