@@ -2,6 +2,7 @@ const wikiQueries = require("../db/queries.wikis.js");
 const Authorizer = require("../policies/wiki");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
+const markdown = require("markdown").markdown;
 
 module.exports = {
   index(req, res, next){
@@ -60,6 +61,7 @@ module.exports = {
     const authorized = new Authorizer(req.user).new();
 
     if(authorized) {
+      markdown.toHTML(wiki.body);
       res.render("wikis/new");
     } else {
       req.flash("notice", "You are not authorized to do that.");
@@ -86,6 +88,7 @@ module.exports = {
           res.redirect(500, "/wikis/new");
           console.log("newWiki:failed");
         } else {
+          markdown.toHTML(wiki.body);
           req.flash("notice", "Wiki created successfully.");
           res.redirect(303, `/wikis/${wiki.id}`);
           console.log(newWiki);
@@ -103,6 +106,7 @@ module.exports = {
         res.redirect(404, "/");
       } else {
         console.log(wiki)
+        markdown.toHTML(wiki.body);
         res.render("wikis/show", {wiki});
       }
     });
