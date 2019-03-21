@@ -141,15 +141,5 @@ module.exports = {
         res.redirect(`/wikis/${req.params.id}`);
       }
     });
-  }/*,
-  downgrade(req, res, next){
-    wikiQueries.downgradeWikis(req, id, (err, user) => {
-      if(err){
-        console.log('err', err)
-        req.flash("error", err);
-      } else {
-        console.log('Wikis Downgraded')
-      }
-    });
-  }*/
+  }
 }
