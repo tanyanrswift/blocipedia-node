@@ -61,7 +61,6 @@ module.exports = {
     const authorized = new Authorizer(req.user).new();
 
     if(authorized) {
-      markdown.toHTML(wiki.body);
       res.render("wikis/new");
     } else {
       req.flash("notice", "You are not authorized to do that.");
