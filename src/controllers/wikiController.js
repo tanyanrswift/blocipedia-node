@@ -1,17 +1,22 @@
 const wikiQueries = require("../db/queries.wikis.js");
 const Authorizer = require("../policies/wiki");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 module.exports = {
   index(req, res, next){
-    const authorized = new Authorizer(req.user);
+    console.log("wikiController#index Called Successfully!\n\n");
+    console.log(req.user);
+    const authorized = new Authorizer(req.user).show();
     let currentUser = {
       username: req.body.username,
       email: req.body.email,
       password: req.body.password,
-      role: req.body.role,
+      role: req.user.role,
       id: req.user.id
     }
     if(authorized && currentUser.role == 'standard'){
+      console.log("Found Standard User!\n\n");
       wikiQueries.getAllWikis({private: false}, (err, wikis) => {
         if(err){
           console.log(err)
@@ -23,6 +28,7 @@ module.exports = {
       })
     }
     else if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
+      console.log("Found Premium User, or Admin User!\n\n")
       wikiQueries.getAllWikis({
         [Op.or]: [{private: true, userId: currentUser.id}, {private: false}]}, (err, wikis) => {
         //SELECT all wikis IF (private=true AND wiki userId=currentUser.id) OR private=false
@@ -35,17 +41,20 @@ module.exports = {
         }
       })
     }
-    /*else {
+    else {
+      console.log("ERROR: User Not Authorized!\n\n");
+      console.log(authorized)
+      console.log(currentUser.role)
       wikiQueries.getAllWikis({private: false}, (err, wikis) => {
         if(err){
           console.log(err)
           res.redirect(500, "static/index");
         } else {
-          console.log('standard wikis')
+          console.log('not logged in wikis')
           res.render("wikis/index", {wikis});
         }
       })
-    }*/
+    }
   },
   new(req, res, next){
     const authorized = new Authorizer(req.user).new();
@@ -132,7 +141,7 @@ module.exports = {
         res.redirect(`/wikis/${req.params.id}`);
       }
     });
-  },
+  }/*,
   downgrade(req, res, next){
     wikiQueries.downgradeWikis(req, id, (err, user) => {
       if(err){
@@ -142,5 +151,5 @@ module.exports = {
         console.log('Wikis Downgraded')
       }
     });
-  }
+  }*/
 }
