@@ -37,6 +37,19 @@
           <% }) %>
         </ul>
 
+        <% } else if (currentUser && (currentUser.id == collaborator.userId)) { %>
+          <a href="/wikis/new" class="btn btn-success">New Wiki</a>
+
+          <ul class="list-group">
+            <% wikis.forEach((wiki) => { %>
+              <% if((wiki.private == true && currentUser.id == collaborator.userId) || wiki.private == false) { %>
+              <li class="list-group-item">
+                <a href="/wikis/<%= wiki.id %>"> <%= wiki.title %> </a>
+              </li>
+              <% } %>
+            <% }) %>
+          </ul>
+
         <% } else { %>
           <ul class="list-group">
             <% wikis.forEach((wiki) => { %>

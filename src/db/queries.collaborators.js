@@ -4,6 +4,7 @@ const User = require("./models").User;
 
 module.exports = {
   createCollaborator(newCollaborator, callback){
+    console.log('createCollaborator')
     return Collaborator.create(newCollaborator)
     .then((collaborator) => {
       callback(null, collaborator);
@@ -13,6 +14,7 @@ module.exports = {
     });
   },
   destroyCollaborator(req, callback){
+    console.log('destroyCollaborator')
     return Collaborator.findbyId(req.params.id)
     .then((collaborator) => {
       collaborator.destroy();

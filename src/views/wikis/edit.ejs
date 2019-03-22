@@ -24,7 +24,7 @@
           <button type="submit" class="btn btn-primary">Update</button>
         </form>
 
-      <% } else if (currentUser && (currentUser.role == 'premium' || currentUser.role == 'admin')) { %>
+      <% } else if (currentUser && (currentUser.role == 'premium' || currentUser.role == 'admin' || currentUser.id == collaborator.id)) { %>
 
         <form action="/wikis/<%= wiki.id %>/update" method="post">
           <div class="form-group">
@@ -44,8 +44,12 @@
           </div>
           <button type="submit" class="btn btn-primary">Update</button>
         </form>
+        <br>
 
-        <form action="/wikis/<%= wiki.id %>/collaborators/create" method="post">
+        <a href="/wikis/<%= wiki.id %>/collaborators/create" class="btn btn-info">Add Collaborator</a>
+        <a href="/wikis/<%= wiki.id %>/collaborators/destroy" class="btn btn-info">Remove Collaborator</a>
+
+        <!---<form action="/wikis/<%= wiki.id %>/collaborators/create" method="post">
           <div>
             <button type="submit" class="btn btn-primary">Add Collaborator</button>
           </div>
@@ -54,7 +58,7 @@
           <div>
             <button type="submit" class="btn btn-primary">Remove Collaborator</button>
           </div>
-        </form>
+        </form>--->
       <% } %>
 
     </main>
