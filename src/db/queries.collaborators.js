@@ -15,7 +15,8 @@ module.exports = {
   },
   destroyCollaborator(req, callback){
     console.log('destroyCollaborator')
-    return Collaborator.findbyId(req.params.id)
+    console.log("COLLABORATOR ID:", req.params.id)
+    return Collaborator.findById(req.params.id)
     .then((collaborator) => {
       collaborator.destroy();
       callback(null, collaborator);
