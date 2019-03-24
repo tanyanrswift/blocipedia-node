@@ -7,7 +7,6 @@ const markdown = require("markdown").markdown;
 module.exports = {
   index(req, res, next){
     console.log("wikiController#index Called Successfully!\n\n");
-    console.log(req.user);
     const authorized = new Authorizer(req.user).show();
     let currentUser = {
       username: req.body.username,

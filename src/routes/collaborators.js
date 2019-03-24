@@ -7,7 +7,8 @@ const Wiki = require("../../src/db/models").Wiki;
 const validation = require("./validation")
 const User = require("../../src/db/models").User;
 
-router.get("/wikis/:wikiId/collaborators/new", collaboratorController.new);
+router.get("/wikis/:wikiId/collaborators/add", collaboratorController.add);
+router.get("/wikis/:wikiId/collaborators/remove", collaboratorController.remove);
 router.post("/wikis/:wikiId/collaborators/create", collaboratorController.create);
 router.post("/wikis/:wikiId/collaborators/destroy", collaboratorController.destroy);
 
