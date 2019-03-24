@@ -9,9 +9,10 @@
     <main class="container">
 
       <% include ../static/partials/messages.ejs %>
-
+      
       <h2>Add Collaborator</h2>
-        <form action="/wikis/<% wiki.id %>/collaborators/create" method="post">
+
+        <form style="display:initial" action="/wikis/<%= wiki.id %>/collaborators/create" method="post">
           <div class="form-group">
             <label for="username">Collaborator Username</label>
             <input type="text" class="form-control" name="collaborator" aria-describedby="collaboratorHelp" placeholder="Enter Username">

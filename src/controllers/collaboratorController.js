@@ -2,17 +2,6 @@ const collaboratorQueries = require("../db/queries.collaborators.js");
 const wikiQueries = require("../db/queries.wikis.js");
 
 module.exports = {
-  /*new(req, res, next){
-    console.log("collaboratorController New Called Successfully")
-    let wiki = {
-      title: req.body.title,
-      body: req.body.body,
-      userId: req.user.id,
-      private: req.body.private
-    };
-    console.log(wiki);
-    res.render("collaborators/new", {wikiId: req.params.wikiId});
-  },*/
   add(req, res, next){
     console.log("collaboratorController Add Called Successfully")
     res.render("collaborators/add")
