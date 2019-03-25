@@ -5,38 +5,18 @@ const User = require("./models").User;
 module.exports = {
   createCollaborator(newCollaborator, req, callback){
     console.log('createCollaborator')
-    User.findAll({
-      where: {
-        id: req.body.collaborator
-      }
+    return Collaborator.create({
+      username: newCollaborator.username,
+      userId: newCollaborator.userId,
+      wikiId: newCollaboraotr.wikiId
     })
-    .then((users) => {
-      Collaborator.findAll({
-        where: {
-          wikiId: req.params.wikiId,
-          userId: req.user.id
-        }
-      })
-      .then((collaborators) => {
-        return Collaborator.create(newCollaborator)
-        .then((collaborator) => {
-          callback(null, collaborator);
-        })
-        .catch((err) => {
-          callback(err);
-        })
-      })
-      .catch((err) => {
-        callback(err);
-      })
-    })
-    /*return Collaborator.create(newCollaborator)
+
     .then((collaborator) => {
       callback(null, collaborator);
     })
     .catch((err) => {
       callback(err);
-    });*/
+    });
   },
   destroyCollaborator(req, callback){
     console.log('destroyCollaborator')
@@ -52,10 +32,5 @@ module.exports = {
     .catch((err) => {
       callback(err);
     });
-    /*return Collaborator.findById(req.params.id)
-    .then((collaborator) => {
-      collaborator.destroy();
-      callback(null, collaborator);
-    })*/
   }
 }
