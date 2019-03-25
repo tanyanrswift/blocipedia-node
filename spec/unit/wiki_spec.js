@@ -20,7 +20,8 @@ describe("Wiki", () => {
 
          Wiki.create({
            title: "Catwiki",
-           body: "A wiki about cats."
+           body: "A wiki about cats.",
+           private: false;
          })
          .then((wiki) => {
            this.wiki = wiki;
@@ -36,12 +37,14 @@ describe("Wiki", () => {
 
       Wiki.create({
         title: "Dogwiki",
-        body: "A wiki about dogs."
+        body: "A wiki about dogs.",
+        private: false
       })
       .then((wiki) => {
 
         expect(wiki.title).toBe("Dogwiki");
         expect(wiki.body).toBe("A wiki about dogs.");
+        expect(wiki.private).toBe(false);
         done();
       })
       .catch((err) => {

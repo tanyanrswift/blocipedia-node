@@ -15,7 +15,8 @@ describe("routes : wikis", () => {
       User.create({
         username: "user",
         email: "example123@example.com",
-        password: "password1"
+        password: "password1",
+        role: "standard"
       })
       .then((user) => {
         this.user = user;
@@ -23,14 +24,16 @@ describe("routes : wikis", () => {
           url: "http://localhost:3000/auth/fake",
           form: {
             userId: user.id,
-            email: user.email
+            email: user.email,
+            role: user.role
           }
         });
 
         Wiki.create({
           title: "Horsewiki",
           body: "A wiki about horses.",
-          userId: user.id
+          userId: user.id,
+          private: false
         })
         .then((wiki) => {
           this.wiki = wiki;
@@ -79,7 +82,8 @@ describe("routes : wikis", () => {
         form: {
           title: "Cowwiki",
           body: "A wiki about cows.",
-          userId: this.user.id
+          userId: this.user.id,
+          private: false
         }
       };
 
@@ -91,6 +95,7 @@ describe("routes : wikis", () => {
             expect(res.statusCode).toBe(303);
             expect(wiki.title).toBe("Cowwiki");
             expect(wiki.body).toBe("A wiki about cows.");
+            expect(wiki.private).toBe(false);
             done();
           })
           .catch((err) => {
@@ -165,7 +170,8 @@ describe("routes : wikis", () => {
         form: {
           title: "Horsewiki",
           body: "A wiki about horses.",
-          userId: this.user.id
+          userId: this.user.id,
+          private: true
         }
       };
 
