@@ -9,18 +9,16 @@ module.exports = {
   create(req, res, next){
     console.log("collaboratorController Create Called Successfully")
     let newCollaborator = {
-      username: req.body.username,
-      role: req.body.role,
-      wikiId: req.params.wikiId,
+      wikiId: req.params.id,
       userId: req.user.id
     };
     collaboratorQueries.createCollaborator(newCollaborator, req, (err, collaborator) => {
       if(err){
+        console.log(err);
         req.flash("error", err);
       }
       console.log("success")
-      console.log(req.headers.referer);
-      res.redirect(req.headers.referer);
+      res.redirect(`/wikis/${req.params.id}`);
     });
   },
   remove(req, res, next){

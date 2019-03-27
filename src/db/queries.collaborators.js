@@ -6,9 +6,8 @@ module.exports = {
   createCollaborator(newCollaborator, req, callback){
     console.log('createCollaborator')
     return Collaborator.create({
-      username: newCollaborator.username,
       userId: newCollaborator.userId,
-      wikiId: newCollaboraotr.wikiId
+      wikiId: newCollaborator.wikiId
     })
 
     .then((collaborator) => {
@@ -23,7 +22,7 @@ module.exports = {
     Collaborator.destroy({
       where: {
         userId: req.body.collaborator,
-        wikiId: req.params.wikiId
+        wikiId: req.params.id
       }
     })
     .then((deletedRecordsCount) => {

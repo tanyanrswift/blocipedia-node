@@ -10,16 +10,14 @@
 
       <% include ../static/partials/messages.ejs %>
 
-      <% if(collaborators) { %>
-        <h2>Remove Collaborator</h2>
-          <form action="collaborators/destroy" method="post">
-            <div class="form-group">
-              <label for="username">Collaborator Username</label>
-              <input type="text" class="form-control" name="collaborator" aria-describedby="collaboratorHelp" placeholder="Enter Username">
-              <button type="submit" class="btn btn-primary">Submit</button>
-            </div>
-          </form>
-      <% } %>
+      <h2>Remove Collaborator</h2>
+        <form action="destroy" method="post">
+          <div class="form-group">
+            <label for="username">Collaborator Username</label>
+            <input type="text" class="form-control" name="collaborator" aria-describedby="collaboratorHelp" placeholder="Enter Username">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </form>
 
     </main>
 
