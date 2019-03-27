@@ -47,6 +47,107 @@ describe("routes : wikis", () => {
       });
 
     });
+  
+  describe("admin or premium user performing CRUD actions for Wiki", () => {
+
+    beforeEach((done) => {
+      User.create({
+        username: "admin1",
+        email: "admin@example.com",
+        password: "123456",
+        role: "admin"
+      })
+      .then((user) => {
+        request.get({
+          url: "http://localhost:3000/auth/fake",
+          form: {
+            username: user.username,
+            role: user.role,
+            userId: user.id,
+            email: user.email
+          }
+        },
+          (err, res, body) => {
+            done();
+          }
+        );
+      });
+    });
+
+    describe("POST /wikis/create", () => {
+      const options = {
+        url: `${base}create`,
+        form: {
+          title: "Doggowiki",
+          body: "A wiki about doggos.",
+          private: true
+        }
+      };
+
+      it("should create a new wiki and redirect", (done) => {
+        request.post(options,
+          (err, res, body) => {
+            Wiki.findOne({where: {title: "Doggowiki"}})
+            .then((wiki) => {
+              expect(wiki.title).toBe("Doggowiki");
+              expect(wiki.body).toBe("A wiki about doggos.");
+              expect(wiki.private).toBe(true);
+              done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            });
+          }
+        );
+      });
+    });
+    describe("GET /wikis/:id/edit", () => {
+
+      it("should render a view with an edit wiki form", (done) => {
+        request.get(`${base}${this.wiki.id}/edit`, (err, res, body) => {
+          expect(err).toBeNull();
+          expect(body).toContain("Edit Wiki");
+          expect(body).toContain("Doggowiki");
+          expect(body).toContain("Would you like it to be private or public?");
+          done();
+        });
+      });
+  
+    });
+  
+    describe("POST /wikis/:id/update", () => {
+  
+      it("should update the wiki with the given values", (done) => {
+        const options = {
+          url: `${base}${this.wiki.id}/update`,
+          form: {
+            title: "Doggowiki",
+            body: "A wiki about doggos.",
+            userId: this.user.id,
+            private: true
+          }
+        };
+  
+        request.post(options,
+          (err, res, body) => {
+  
+            expect(err).toBeNull();
+            Wiki.findOne({
+              where: { id: this.wiki.id }
+            })
+            .then((wiki) => {
+              expect(wiki.title).toBe("Doggowiki");
+              done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            });
+          });
+        });
+      });
+    });
 
   describe("GET /wikis", () => {
 

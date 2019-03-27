@@ -21,7 +21,7 @@ describe("Wiki", () => {
          Wiki.create({
            title: "Catwiki",
            body: "A wiki about cats.",
-           private: false;
+           private: false
          })
          .then((wiki) => {
            this.wiki = wiki;
