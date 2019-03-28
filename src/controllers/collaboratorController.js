@@ -8,11 +8,7 @@ module.exports = {
   },
   create(req, res, next){
     console.log("collaboratorController Create Called Successfully")
-    let newCollaborator = {
-      wikiId: req.params.id,
-      userId: req.user.id
-    };
-    collaboratorQueries.createCollaborator(newCollaborator, req, (err, collaborator) => {
+    collaboratorQueries.createCollaborator(req, (err, collaborator) => {
       if(err){
         console.log(err);
         req.flash("error", err);
@@ -29,8 +25,9 @@ module.exports = {
     console.log("collaboratorController destroy Called Successfully");
     collaboratorQueries.destroyCollaborator(req, (err, collaborator) => {
       if(err){
+        console.log("ERROR", err);
         req.flash("error", err);
-        res.redirect(err, req.headers.referer);
+        res.redirect(typeof err == "number" ? err : 500, req.headers.referer);
       } else {
         console.log("success")
         res.redirect(req.headers.referer);

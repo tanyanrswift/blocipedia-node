@@ -3,13 +3,20 @@ const Wiki = require("./models").Wiki;
 const User = require("./models").User;
 
 module.exports = {
-  createCollaborator(newCollaborator, req, callback){
+  createCollaborator(req, callback){
     console.log('createCollaborator')
-    return Collaborator.create({
-      userId: newCollaborator.userId,
-      wikiId: newCollaborator.wikiId
+    User.findAll({
+      where: {
+        username: req.body.collaborator
+      }
     })
-
+    .then(user => {
+      console.log(req.body)
+      Collaborator.create({
+        userId: user.id,
+        wikiId: req.params.id
+      })
+    })
     .then((collaborator) => {
       callback(null, collaborator);
     })
@@ -21,7 +28,7 @@ module.exports = {
     console.log('destroyCollaborator')
     Collaborator.destroy({
       where: {
-        userId: req.body.collaborator,
+        username: req.body.collaborator,
         wikiId: req.params.id
       }
     })
