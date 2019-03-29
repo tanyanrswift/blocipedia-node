@@ -48,6 +48,8 @@ describe("routes : wikis", () => {
 
     });
   
+  });
+  
   describe("admin or premium user performing CRUD actions for Wiki", () => {
 
     beforeEach((done) => {
@@ -72,6 +74,32 @@ describe("routes : wikis", () => {
           }
         );
       });
+    });
+
+    describe("GET /wikis", () => {
+
+      it("should return a status code 200 and all wikis", (done) => {
+        request.get(base, (err, res, body) => {
+          expect(res.statusCode).toBe(200);
+          expect(err).toBeNull();
+          expect(body).toContain("Wikis");
+          expect(body).toContain("Horsewiki");
+          done();
+        });
+      });
+  
+    });
+
+    describe("GET /wikis/new", () => {
+
+      it("should render a new wiki form", (done) => {
+        request.get(`${base}new`, (err, res, body) => {
+          expect(err).toBeNull();
+          //expect(body).toContain("New Wiki");
+          done();
+        });
+      });
+  
     });
 
     describe("POST /wikis/create", () => {
@@ -102,14 +130,55 @@ describe("routes : wikis", () => {
         );
       });
     });
+
+    describe("GET /wikis/:id", () => {
+
+      it("should render a view with the selected wiki", (done) => {
+        request.get(`${base}${this.wiki.id}`, (err, res, body) => {
+          expect(err).toBeNull();
+          expect(body).toContain("Horsewiki");
+          done();
+          });
+        });
+  
+      });
+  
+    describe("POST /wikis/:id/destroy", () => {
+  
+      it("should delete the wiki with the associated ID", (done) => {
+  
+        Wiki.all()
+        .then((wikis) => {
+  
+          const wikiCountBeforeDelete = wikis.length;
+  
+          expect(wikiCountBeforeDelete).toBe(1);
+  
+          request.post(`${base}${this.wiki.id}/destroy`, (err, res, body) => {
+            Wiki.all()
+            .then((wikis) => {
+              expect(err).toBeNull();
+              expect(wikis.length).toBe(wikiCountBeforeDelete - 1);
+              done();
+            })
+            .catch((err) => {
+              console.log(err);
+              done();
+            })
+  
+          });
+        });
+  
+      });
+  
+    });
+
     describe("GET /wikis/:id/edit", () => {
 
       it("should render a view with an edit wiki form", (done) => {
         request.get(`${base}${this.wiki.id}/edit`, (err, res, body) => {
           expect(err).toBeNull();
           expect(body).toContain("Edit Wiki");
-          expect(body).toContain("Doggowiki");
-          expect(body).toContain("Would you like it to be private or public?");
           done();
         });
       });
@@ -149,150 +218,152 @@ describe("routes : wikis", () => {
       });
     });
 
-  describe("GET /wikis", () => {
+    describe("standard user performing CRUD actions for Wiki", () => {
 
-    it("should return a status code 200 and all wikis", (done) => {
-      request.get(base, (err, res, body) => {
-        expect(res.statusCode).toBe(200);
-        expect(err).toBeNull();
-        expect(body).toContain("Wikis");
-        expect(body).toContain("Horsewiki");
-        done();
-      });
-    });
+      describe("GET /wikis", () => {
 
-  });
-
-  describe("GET /wikis/new", () => {
-
-    it("should render a new wiki form", (done) => {
-      request.get(`${base}new`, (err, res, body) => {
-        expect(err).toBeNull();
-        expect(body).toContain("New Wiki");
-        done();
-      });
-    });
-
-  });
-
-  describe("POST /wikis/create", () => {
-
-    it("should create a new wiki and redirect", (done) => {
-      const options = {
-        url: `${base}create`,
-        form: {
-          title: "Cowwiki",
-          body: "A wiki about cows.",
-          userId: this.user.id,
-          private: false
-        }
-      };
-
-      request.post(options,
-
-        (err, res, body) => {
-          Wiki.findOne({where: {title: "Cowwiki"}})
-          .then((wiki) => {
-            expect(res.statusCode).toBe(303);
-            expect(wiki.title).toBe("Cowwiki");
-            expect(wiki.body).toBe("A wiki about cows.");
-            expect(wiki.private).toBe(false);
-            done();
-          })
-          .catch((err) => {
-            console.log(err);
+        it("should return a status code 200 and all standard wikis", (done) => {
+          request.get(base, (err, res, body) => {
+            expect(res.statusCode).toBe(200);
+            expect(err).toBeNull();
+            expect(body).toContain("Wikis");
+            expect(body).toContain("Horsewiki");
             done();
           });
-        }
-      );
-    });
-  });
-
-  describe("GET /wikis/:id", () => {
-
-    it("should render a view with the selected wiki", (done) => {
-      request.get(`${base}${this.wiki.id}`, (err, res, body) => {
-        expect(err).toBeNull();
-        expect(body).toContain("Horsewiki");
-        done();
+        });
+    
+      });
+    
+      describe("GET /wikis/new", () => {
+    
+        it("should render a new wiki form", (done) => {
+          request.get(`${base}new`, (err, res, body) => {
+            expect(err).toBeNull();
+            //expect(body).toContain("New Wiki");
+            done();
+          });
+        });
+    
+      });
+    
+      describe("POST /wikis/create", () => {
+    
+        it("should create a new wiki and redirect", (done) => {
+          const options = {
+            url: `${base}create`,
+            form: {
+              title: "Cowwiki",
+              body: "A wiki about cows.",
+              userId: this.user.id,
+              private: false
+            }
+          };
+    
+          request.post(options,
+    
+            (err, res, body) => {
+              Wiki.findOne({where: {title: "Cowwiki"}})
+              .then((wiki) => {
+                expect(res.statusCode).toBe(303);
+                expect(wiki.title).toBe("Cowwiki");
+                expect(wiki.body).toBe("A wiki about cows.");
+                expect(wiki.private).toBe(false);
+                done();
+              })
+              .catch((err) => {
+                console.log(err);
+                done();
+              });
+            }
+          );
         });
       });
-
-    });
-
-  describe("POST /wikis/:id/destroy", () => {
-
-    it("should delete the wiki with the associated ID", (done) => {
-
-      Wiki.all()
-      .then((wikis) => {
-
-        const wikiCountBeforeDelete = wikis.length;
-
-        expect(wikiCountBeforeDelete).toBe(1);
-
-        request.post(`${base}${this.wiki.id}/destroy`, (err, res, body) => {
+    
+      describe("GET /wikis/:id", () => {
+    
+        it("should render a view with the selected wiki", (done) => {
+          request.get(`${base}${this.wiki.id}`, (err, res, body) => {
+            expect(err).toBeNull();
+            expect(body).toContain("Horsewiki");
+            done();
+            });
+          });
+    
+        });
+    
+      describe("POST /wikis/:id/destroy", () => {
+    
+        it("should delete the wiki with the associated ID", (done) => {
+    
           Wiki.all()
           .then((wikis) => {
-            expect(err).toBeNull();
-            expect(wikis.length).toBe(wikiCountBeforeDelete - 1);
-            done();
-          })
-          .catch((err) => {
-            console.log(err);
-            done();
-          })
-
+    
+            const wikiCountBeforeDelete = wikis.length;
+    
+            expect(wikiCountBeforeDelete).toBe(1);
+    
+            request.post(`${base}${this.wiki.id}/destroy`, (err, res, body) => {
+              Wiki.all()
+              .then((wikis) => {
+                expect(err).toBeNull();
+                expect(wikis.length).toBe(wikiCountBeforeDelete);
+                done();
+              })
+              .catch((err) => {
+                console.log(err);
+                done();
+              })
+    
+            });
+          });
+    
         });
+    
       });
-
-    });
-
-  });
-
-  describe("GET /wikis/:id/edit", () => {
-
-    it("should render a view with an edit wiki form", (done) => {
-      request.get(`${base}${this.wiki.id}/edit`, (err, res, body) => {
-        expect(err).toBeNull();
-        expect(body).toContain("Edit Wiki");
-        expect(body).toContain("Horsewiki");
-        done();
-      });
-    });
-
-  });
-
-  describe("POST /wikis/:id/update", () => {
-
-    it("should update the wiki with the given values", (done) => {
-      const options = {
-        url: `${base}${this.wiki.id}/update`,
-        form: {
-          title: "Horsewiki",
-          body: "A wiki about horses.",
-          userId: this.user.id,
-          private: true
-        }
-      };
-
-      request.post(options,
-        (err, res, body) => {
-
-          expect(err).toBeNull();
-          Wiki.findOne({
-            where: { id: this.wiki.id }
-          })
-          .then((wiki) => {
-            expect(wiki.title).toBe("Horsewiki");
-            done();
-          })
-          .catch((err) => {
-            console.log(err);
+    
+      describe("GET /wikis/:id/edit", () => {
+    
+        it("should render a view with an edit wiki form", (done) => {
+          request.get(`${base}${this.wiki.id}/edit`, (err, res, body) => {
+            expect(err).toBeNull();
+            expect(body).toContain("Edit Wiki");
             done();
           });
         });
+    
       });
-    });
-  });
+    
+      describe("POST /wikis/:id/update", () => {
+    
+        it("should update the wiki with the given values", (done) => {
+          const options = {
+            url: `${base}${this.wiki.id}/update`,
+            form: {
+              title: "Horsewiki",
+              body: "A wiki about horses.",
+              userId: this.user.id,
+              private: true
+            }
+          };
+    
+          request.post(options,
+            (err, res, body) => {
+    
+              expect(err).toBeNull();
+              Wiki.findOne({
+                where: { id: this.wiki.id }
+              })
+              .then((wiki) => {
+                expect(wiki.title).toBe("Horsewiki");
+                done();
+              })
+              .catch((err) => {
+                console.log(err);
+                done();
+              });
+            });
+          });
+        });
+    })
+
 });
