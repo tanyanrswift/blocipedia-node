@@ -30,7 +30,7 @@ module.exports = {
         res.redirect(typeof err == "number" ? err : 500, req.headers.referer);
       } else {
         console.log("success")
-        res.redirect(req.headers.referer);
+        res.redirect(`/wikis/${req.params.id}`);
       }
     });
   }

@@ -11,9 +11,10 @@ module.exports = {
       }
     })
     .then(user => {
-      console.log(req.body)
+      console.log(req.body);
+      console.log(user);
       Collaborator.create({
-        userId: user.id,
+        userId: user[0].id,
         wikiId: req.params.id
       })
     })
@@ -28,7 +29,7 @@ module.exports = {
     console.log('destroyCollaborator')
     Collaborator.destroy({
       where: {
-        username: req.body.collaborator,
+        //username: req.body.collaborator,
         wikiId: req.params.id
       }
     })

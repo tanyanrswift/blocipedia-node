@@ -11,7 +11,7 @@
 
       <h1>Wikis</h1>
 
-      <% if(currentUser && (currentUser.role == 'standard')) { %>
+      <% if(currentUser && (currentUser.role == 'standard' && currentUser.id != collaborator.userId)) { %>
         <a href="/wikis/new" class="btn btn-success">New Wiki</a>
 
         <ul class="list-group">
