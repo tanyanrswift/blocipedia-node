@@ -42,6 +42,16 @@
           </div>
           <button type="submit" class="btn btn-primary">Update</button>
         </form>
+        <h2>Current Collaborators</h2>
+          <% if(wiki.collaborators) { %>
+            <ul class ="list-group">
+              <% wiki.collaborators.forEach((collaborator) => {  %>
+                <li class="list-group-item">
+                  <%= collaborator.User.username %>
+                </li>
+              <% }) %>
+            </ul>
+        <% } %>
         <form action="/wikis/<%= wiki.id %>/collaborators/add" method="get">
           <div>
             <button type="submit" class="btn btn-primary">Add Collaborator</button>

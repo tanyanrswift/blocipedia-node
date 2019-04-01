@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
 
     User.hasMany(models.Collaborator, {
       foreignKey: "userId",
-      onDelete: "CASCADE"
+      onDelete: "CASCADE",
+      as: "collaborators"
     });
   };
 

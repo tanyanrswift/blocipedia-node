@@ -5,6 +5,7 @@ const wikiController = require("../controllers/wikiController");
 const Wiki = require("../../src/db/models").Wiki;
 const validation = require("./validation")
 const User = require("../../src/db/models").User;
+const Collaborator = require("../../src/db/models").Collaborator;
 
 router.get("/wikis", wikiController.index);
 router.get("/wikis/new", wikiController.new);
