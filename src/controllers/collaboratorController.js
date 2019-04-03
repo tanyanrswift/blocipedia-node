@@ -14,6 +14,7 @@ module.exports = {
         req.flash("error", err);
       }
       console.log("success")
+      console.log(collaborators)
       res.redirect(`/wikis/${req.params.id}`);
     });
   },
