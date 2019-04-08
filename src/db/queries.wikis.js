@@ -8,6 +8,10 @@ module.exports = {
   getAllWikis(options, callback){
     console.log('getAllWikis')
     return Wiki.findAll({
+      include: [{
+        model: Collaborator,
+        as: "collaborators"
+      }],
       where: options
     })
     .then((wikis) => {
@@ -15,7 +19,6 @@ module.exports = {
       callback(null, wikis);
     })
     .catch((err) => {
-      console.log(err)
       callback(err);
     })
   },
@@ -30,6 +33,7 @@ module.exports = {
       callback(null, wiki);
     })
     .catch((err) => {
+      console.log(err);
       callback(err);
     })
   },

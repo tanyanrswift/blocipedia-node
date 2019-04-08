@@ -15,23 +15,7 @@ module.exports = {
       role: req.user.role,
       id: req.user.id
     }
-    // let collaborator = {
-    //   wikiId: req.body.wikiId,
-    //   userId: req.body.userId
-    // }
-    if(authorized && (currentUser.role == 'standard') && currentUser.id != collaborator.userId){
-      console.log("Found Standard non Collaborator User!\n\n");
-      wikiQueries.getAllWikis({private: false}, (err, wikis) => {
-        if(err){
-          console.log(err)
-          res.redirect(500, "static/index");
-        } else {
-          console.log('standard wikis')
-          res.render("wikis/index", {wikis});
-        }
-      })
-    }
-    else if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
+    if(authorized && (currentUser.role == 'premium' || currentUser.role == 'admin')){
       console.log("Found Premium User, or Admin User!\n\n")
       wikiQueries.getAllWikis({
         [Op.or]: [{private: true, userId: currentUser.id}, {private: false}]}, (err, wikis) => {
@@ -45,11 +29,11 @@ module.exports = {
         }
       })
     }
-    else if(authorized && (currentUser.role == 'standard') && currentUser.id == collaborator.userId){
-      console.log("Found Collaborator!\n\n")
+    else if(authorized && (currentUser.role == 'standard')){
+      console.log("Found Standard User!\n\n")
       wikiQueries.getAllWikis({
-        [Op.or]: [{private: true, userId: collaborator.userId}, {private: false}]}, (err, wikis) => {
-        //SELECT all wikis IF (private=true AND wiki userId=collaborator userId) OR private=false
+        [Op.or]: [{private: true, '$collaborators.userId$': currentUser.id}, {private: false}]}, (err, wikis) => {
+        //SELECT all wikis IF (private=true AND collaborator userId == userId) OR private=false
         if(err){
           console.log(err)
           res.redirect(500, "static/index");
